@@ -1,0 +1,37 @@
+#spring:
+ # datasource:
+#    url: jdbc:mysql://db:3030
+ #   username: sa
+ #   password: Projects@123
+  #  driver-class-name: com.mysql.jdbc.Driver
+application:
+  salt: "sdasdas23223" 
+  secret: "1934823932602923"
+spring:
+  main:
+    web-application-type: "servlet"
+  datasource:
+    url: jdbc:h2:~/data/demo2
+    username: sa
+    password: Projects@123
+    driverClassName: org.h2.Driver
+  h2:
+   console:
+      path: /h2
+      enabled: true
+      settings:
+        web-allow-others: true
+  jpa:
+    show-sql: false
+    hibernate: 
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        jdbc:
+          batch-size: 50
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
