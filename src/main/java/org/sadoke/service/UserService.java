@@ -29,7 +29,7 @@ public class UserService {
 			throw new UserAlreadyExistException("There is an account with that email address: " + userDto.getEmail());
 		}
 		if (userExists(userDto.getUserId())) {
-			throw new UserAlreadyExistException("There is an account with that email address: " + userDto.getEmail());
+			throw new UserAlreadyExistException("There is an account with that user name: " + userDto.getUserId());
 		}
 
 		return userRepository.save(User.builder().userId(userDto.getUserId())
