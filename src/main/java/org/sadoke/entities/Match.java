@@ -1,6 +1,7 @@
 package org.sadoke.entities;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -29,6 +30,6 @@ public class Match {
 	private User player1;
 	@ManyToOne
 	private User player2;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private MatchDetails details;
 }

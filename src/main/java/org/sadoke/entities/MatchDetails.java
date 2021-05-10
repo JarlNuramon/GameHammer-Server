@@ -6,7 +6,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +31,5 @@ public class MatchDetails {
 	private String player2Race;
 	private Integer turn;
 	private Integer phase;
-	@OneToOne
-	private Match match;
+
 }
