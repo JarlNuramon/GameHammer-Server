@@ -1,5 +1,6 @@
 package org.sadoke.service;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.sadoke.dto.UserDto;
@@ -30,20 +31,18 @@ public class UserService {
 		if (userExists(userDto.getUserId())) {
 			throw new UserAlreadyExistException("There is an account with that email address: " + userDto.getEmail());
 		}
-		User user = new User();
-		user.setUserId(userDto.getUserId());
-		user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		user.setEmail(userDto.getEmail());
 
-		return userRepository.save(user);
+		return userRepository.save(User.builder().userId(userDto.getUserId())
+				.password(passwordEncoder.encode(userDto.getPassword())).email(userDto.getEmail()).enabled(false)
+				.matchesAsHost(new ArrayList<>()).matchesAsPlayer(new ArrayList<>()).build());
 	}
 
 	private boolean emailExists(String email) {
-		return userRepository.findByEmail(email) != null;
+		return userRepository.emailExists(email) > 0;
 	}
 
 	private boolean userExists(String user) {
-		return userRepository.findByEmail(user) != null;
+		return userRepository.userExists(user) > 0;
 	}
 
 	public VerificationToken getVerificationToken(final String VerificationToken) {
@@ -62,7 +61,8 @@ public class UserService {
 		return vToken;
 	}
 
-	public void saveRegisteredUser(User user) {
+	public void confirmRegistration(User user) {
+		user.setEnabled(true);
 		userRepository.save(user);
 
 	}

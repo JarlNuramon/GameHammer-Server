@@ -26,7 +26,7 @@ public class MatchService {
 	private final DetailsRepository detailsRepository;
 
 	public boolean playerExists(String userId) {
-		return userRepos.findByUserId(userId) != null;
+		return userRepos.userExists(userId) > 0;
 	}
 
 	@Transactional

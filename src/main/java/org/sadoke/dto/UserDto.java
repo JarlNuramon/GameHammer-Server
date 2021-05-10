@@ -6,10 +6,12 @@ import javax.validation.constraints.NotNull;
 import org.sadoke.annotation.ValidEmail;
 import org.sadoke.annotation.ValidPassword;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @ValidPassword
+@Builder
 public class UserDto {
 
 	@NotNull

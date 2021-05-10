@@ -1,18 +1,16 @@
 package org.sadoke;
 
-import java.util.ArrayList;
-
+import org.sadoke.dto.UserDto;
 import org.sadoke.entities.User;
-import org.sadoke.repository.UserRepository;
 import org.sadoke.request.MatchRequest;
 import org.sadoke.service.MatchService;
+import org.sadoke.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 @ComponentScan
@@ -21,9 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class DemoApplication implements CommandLineRunner {
 
 	@Autowired
-	private UserRepository userRepo;
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+	private UserService userService;
 	@Autowired
 	private MatchService matchService;
 
@@ -33,10 +29,12 @@ public class DemoApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		userRepo.save(User.builder().matchesAsHost(new ArrayList<>()).matchesAsPlayer(new ArrayList<>()).enabled(true)
-				.email("super@gmail.com").password(passwordEncoder.encode("123")).userId("a").build());
-		userRepo.save(User.builder().matchesAsHost(new ArrayList<>()).matchesAsPlayer(new ArrayList<>()).enabled(true)
-				.email("super2@gmail.com").password(passwordEncoder.encode("123")).userId("b").build());
+		User u1 = userService.registerNewUserAccount(
+				UserDto.builder().userId("a").password("123").matchingPassword("123").email("super@gmail.com").build());
+		User u2 = userService.registerNewUserAccount(UserDto.builder().userId("b").password("123")
+				.matchingPassword("123").email("super2xx@gmail.com").build());
+		userService.confirmRegistration(u1);
+		userService.confirmRegistration(u2);
 		matchService.createMatch(MatchRequest.builder().userIdPlayer1("a").userIdPlayer2("b").user1Race("Necron")
 				.user2Race("Death Guard").build());
 

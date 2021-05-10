@@ -69,8 +69,7 @@ public class UserController {
 		if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
 			return "expired";
 		}
-		user.setEnabled(true);
-		userService.saveRegisteredUser(user);
+		userService.confirmRegistration(user);
 		return "successfull";
 	}
 }
