@@ -31,9 +31,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.headers().frameOptions().sameOrigin().and().csrf().disable().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-				.mvcMatchers("/auth/admin", "/h2").permitAll().antMatchers("/h2/*").permitAll()
-				.antMatchers(HttpMethod.GET).permitAll().antMatchers(HttpMethod.OPTIONS).permitAll().anyRequest()
-				.authenticated();
+				.mvcMatchers("/auth/admin", "/h2").permitAll()
+				.antMatchers("/h2/*").permitAll()
+				.antMatchers(HttpMethod.GET).permitAll()
+				.antMatchers(HttpMethod.OPTIONS).permitAll()
+				.antMatchers(HttpMethod.POST).permitAll()
+				.anyRequest().authenticated();
 	}
 
 	@Bean
