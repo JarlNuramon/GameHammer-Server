@@ -33,8 +33,11 @@ public class AuthenticationController {
 
 	@GetMapping(value = "/dev/{token}")
 	@Operation(summary = "Checks if the token is valid")
-	public Boolean createAuthenticationToken(@PathVariable String token) throws Exception {
-		return tokenService.validateToken(token);
+	public ResponseEntity<String> createAuthenticationToken(@PathVariable String token) throws Exception {
+		if (tokenService.validateToken(token))
+			return ResponseEntity.ok(tokenService.getUsernameFromToken(token));
+		else
+			throw new Exception("Forbidden");
 	}
 
 	@PostMapping(value = "/authenticate")
