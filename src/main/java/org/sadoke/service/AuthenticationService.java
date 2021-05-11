@@ -25,7 +25,7 @@ public class AuthenticationService {
 			throw new NullPointerException("password is empty");
 		try {
 			Optional<User> user = userRepository.findById(username);
-			if (!user.isPresent() || !user.get().getPassword().equals(passwordEncoder.encode(password)))
+			if (!user.isPresent() || !passwordEncoder.matches(password, user.get().getPassword()))
 				throw new Exception("Failed because user does not exist or password is wrong");
 
 		} catch (Exception e) {

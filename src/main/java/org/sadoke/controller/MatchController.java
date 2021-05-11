@@ -7,11 +7,10 @@ import org.sadoke.request.PlayerRequest;
 import org.sadoke.service.MatchService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +30,7 @@ public class MatchController {
 
 	private final MatchService matchService;
 
-	@GetMapping(value = "/findPlayer")
+	@PostMapping(value = "/findPlayer")
 	@Operation(summary = "Returns the searched player you might want to declare a match against")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "He was found", content = {
@@ -49,7 +48,7 @@ public class MatchController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = MatchDto.class)) }),
 			@ApiResponse(responseCode = "400", description = "ehm this shouldn't happen. Please notify the devs", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
-	public ResponseEntity<MatchDto> nextStep(@RequestParam("matchId") String matchid) throws Exception {
+	public ResponseEntity<MatchDto> nextStep(@PathVariable("matchId") String matchid) throws Exception {
 		return ResponseEntity.ok(null);
 	}
 
@@ -60,7 +59,7 @@ public class MatchController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = MatchDto.class)) }),
 			@ApiResponse(responseCode = "400", description = "ehm this shouldn't happen. Please notify the devs", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
-	public ResponseEntity<MatchDto> nextTurn(@RequestParam("matchId") String matchid) throws Exception {
+	public ResponseEntity<MatchDto> nextTurn(@PathVariable("matchId") String matchid) throws Exception {
 		return ResponseEntity.ok(null);
 	}
 
@@ -71,7 +70,7 @@ public class MatchController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = MatchDto.class)) }),
 			@ApiResponse(responseCode = "400", description = "ehm this shouldn't happen. Please notify the devs", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
-	public ResponseEntity<MatchDto> endGame(@RequestParam("matchId") String matchid) throws Exception {
+	public ResponseEntity<MatchDto> endGame(@PathVariable("matchId") String matchid) throws Exception {
 		return ResponseEntity.ok(null);
 	}
 
@@ -82,7 +81,7 @@ public class MatchController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = MatchDto.class)) }),
 			@ApiResponse(responseCode = "400", description = "ehm this shouldn't happen. Please notify the devs", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
-	public ResponseEntity<MatchDto> adjustScores(@RequestParam("matchId") Long matchid,
+	public ResponseEntity<MatchDto> adjustScores(@PathVariable("matchId") Long matchid,
 			@RequestBody GameUpdateRequest request) throws Exception {
 		matchService.adjustScore(matchid, request);
 		return ResponseEntity.ok(null);

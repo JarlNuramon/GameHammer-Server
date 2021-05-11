@@ -67,4 +67,9 @@ public class UserService {
 
 	}
 
+	public User getUser(String username) {
+		// TODO Auto-generated method stub
+		return userRepository.findById(username).get();
+	}
+
 }
