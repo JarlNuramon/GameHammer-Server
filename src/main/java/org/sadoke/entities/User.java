@@ -28,4 +28,7 @@ public class User {
 	private List<Match> matchesAsHost;
 	@OneToMany(mappedBy = "player2", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Match> matchesAsPlayer;
+
+	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<ArmyList> lists;
 }

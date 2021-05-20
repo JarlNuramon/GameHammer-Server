@@ -53,4 +53,25 @@ public class MatchService {
 		return MatchDetails.builder().player1CP(0).player2CP(0).player1Score(0).player2Score(0)
 				.player1Race(m.getUser1Race()).player2Race(m.getUser2Race()).turn(0).phase(0).build();
 	}
+
+	@Transactional
+	public void nextTurn(String matchid) throws Exception {
+		Optional<Match> m = matchRepos.findById(Long.parseLong(matchid));
+		if (!m.isPresent())
+			throw new Exception("Match not found!");
+		MatchDetails mDetails = m.get().getDetails();
+		mDetails.setTurn(mDetails.getTurn() + 1);
+		mDetails.setPhase(1);
+		detailsRepository.save(mDetails);
+	}
+
+	@Transactional
+	public void nextPhase(String matchid) throws Exception {
+		Optional<Match> m = matchRepos.findById(Long.parseLong(matchid));
+		if (!m.isPresent())
+			throw new Exception("Match not found!");
+		MatchDetails mDetails = m.get().getDetails();
+		mDetails.setPhase(mDetails.getPhase() + 1);
+		detailsRepository.save(mDetails);
+	}
 }

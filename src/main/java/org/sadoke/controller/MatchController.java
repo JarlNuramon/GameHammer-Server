@@ -49,6 +49,7 @@ public class MatchController {
 			@ApiResponse(responseCode = "400", description = "ehm this shouldn't happen. Please notify the devs", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
 	public ResponseEntity<MatchDto> nextStep(@PathVariable("matchId") String matchid) throws Exception {
+		matchService.nextPhase(matchid);
 		return ResponseEntity.ok(null);
 	}
 
@@ -60,6 +61,7 @@ public class MatchController {
 			@ApiResponse(responseCode = "400", description = "ehm this shouldn't happen. Please notify the devs", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
 	public ResponseEntity<MatchDto> nextTurn(@PathVariable("matchId") String matchid) throws Exception {
+		matchService.nextTurn(matchid);
 		return ResponseEntity.ok(null);
 	}
 

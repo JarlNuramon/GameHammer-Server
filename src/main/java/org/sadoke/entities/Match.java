@@ -32,4 +32,5 @@ public class Match {
 	private User player2;
 	@OneToOne(cascade = CascadeType.ALL)
 	private MatchDetails details;
+	private boolean finished;
 }
