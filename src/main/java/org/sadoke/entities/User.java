@@ -31,4 +31,9 @@ public class User {
 
 	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<ArmyList> lists;
+
+	@Override
+	public String toString() {
+		return "user: " + userId + " password: " + password;
+	}
 }
