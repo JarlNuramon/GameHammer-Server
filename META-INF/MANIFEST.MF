@@ -3,7 +3,4 @@ Bundle-ManifestVersion: 2
 Bundle-Name: demo
 Bundle-SymbolicName: demo
 Bundle-Version: 1.0.0.qualifier
-Export-Package: de.eggheads.test,
- de.eggheads.test.node,
- de.eggheads.test.repositories,
- de.eggheads.test.strategies
+Export-Package: org.sadoke

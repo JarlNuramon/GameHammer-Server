@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.sadoke.dto.MatchDto;
 import org.sadoke.entities.Match;
 import org.sadoke.entities.MatchDetails;
 import org.sadoke.entities.User;
@@ -73,5 +74,22 @@ public class MatchService {
 		MatchDetails mDetails = m.get().getDetails();
 		mDetails.setPhase(mDetails.getPhase() + 1);
 		detailsRepository.save(mDetails);
+	}
+
+	public MatchDto getMatchDto(String matchid) throws Exception {
+		Optional<Match> m = matchRepos.findById(Long.parseLong(matchid));
+		if (!m.isPresent())
+			throw new Exception("Match not found!");
+
+		return buildMatchDto(m.get());
+	}
+
+	private MatchDto buildMatchDto(Match m) {
+		return MatchDto.builder().phase(m.getDetails().getPhase()).turn(m.getDetails().getTurn())
+				.player1(m.getPlayer1().getUserId()).player2(m.getPlayer2().getUserId())
+				.player1CP(m.getDetails().getPlayer1CP()).player2CP(m.getDetails().getPlayer2CP())
+				.player1Score(m.getDetails().getPlayer1Score()).player2Score(m.getDetails().getPlayer2Score())
+				.player1Race(m.getDetails().getPlayer1Race()).player2Race(m.getDetails().getPlayer2Race())
+				.build();
 	}
 }

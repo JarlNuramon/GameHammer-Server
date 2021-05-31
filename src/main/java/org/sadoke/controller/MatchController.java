@@ -7,6 +7,7 @@ import org.sadoke.request.PlayerRequest;
 import org.sadoke.service.MatchService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +42,19 @@ public class MatchController {
 		return ResponseEntity.ok(matchService.playerExists(request.getUserId()));
 	}
 
+
+	@GetMapping(value = "{matchId}")
+	@Operation(summary = "Returns the searched player you might want to declare a match against")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "He was found", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)) }),
+			@ApiResponse(responseCode = "400", description = "He wasnt found", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)) }) })
+	public ResponseEntity<MatchDto> getMatch(@PathVariable("matchId") String matchid) throws Exception {
+		return ResponseEntity.ok(matchService.getMatchDto(matchid));
+	}
+	
+	
 	@PostMapping(value = "{matchId}/nextStep")
 	@Operation(summary = "Match goes to the next step")
 	@ApiResponses(value = {
@@ -50,7 +64,7 @@ public class MatchController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
 	public ResponseEntity<MatchDto> nextStep(@PathVariable("matchId") String matchid) throws Exception {
 		matchService.nextPhase(matchid);
-		return ResponseEntity.ok(null);
+		return ResponseEntity.ok(matchService.getMatchDto(matchid));
 	}
 
 	@PostMapping(value = "{matchId}/nextTurn")
@@ -62,7 +76,7 @@ public class MatchController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
 	public ResponseEntity<MatchDto> nextTurn(@PathVariable("matchId") String matchid) throws Exception {
 		matchService.nextTurn(matchid);
-		return ResponseEntity.ok(null);
+		return ResponseEntity.ok(matchService.getMatchDto(matchid));
 	}
 
 	@PostMapping(value = "{matchId}/end")
