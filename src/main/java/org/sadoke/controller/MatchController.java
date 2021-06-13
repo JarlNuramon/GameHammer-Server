@@ -44,12 +44,12 @@ public class MatchController {
 
 
 	@GetMapping(value = "{matchId}")
-	@Operation(summary = "Returns the searched player you might want to declare a match against")
+	@Operation(summary = "Returns the match with given id")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "He was found", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = MatchDto.class)) }),
 			@ApiResponse(responseCode = "400", description = "He wasnt found", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)) }) })
+					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
 	public ResponseEntity<MatchDto> getMatch(@PathVariable("matchId") String matchid) throws Exception {
 		return ResponseEntity.ok(matchService.getMatchDto(matchid));
 	}
@@ -107,11 +107,22 @@ public class MatchController {
 	@Operation(summary = "Starts match versus declared player")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successfully started", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = MatchDto.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class)) }),
 			@ApiResponse(responseCode = "400", description = "Match coudln't be started", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
-	public ResponseEntity<MatchDto> startMatch(@RequestBody MatchRequest request) throws Exception {
-		return ResponseEntity.ok(null);
+	public ResponseEntity<Long> startMatch(@RequestBody MatchRequest request) throws Exception {
+		return ResponseEntity.ok(matchService.createMatch(request));
+	}
+
+	@GetMapping(value = "/matchesAsHost/{userId}")
+	@Operation(summary = "Returns the list of Matches a Player hosts")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "He was found", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = MatchDto[].class)) }),
+			@ApiResponse(responseCode = "400", description = "He wasnt found", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)) }) })
+	public ResponseEntity<MatchDto[]> getMatchesAsHost(@PathVariable("userId") String user) throws Exception {
+		return ResponseEntity.ok(matchService.hostMatches(user));
 	}
 
 }

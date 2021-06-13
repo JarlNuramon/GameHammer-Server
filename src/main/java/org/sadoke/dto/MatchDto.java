@@ -6,11 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class MatchDto {
+	private long id;
 	private String player1;
 	private String player2;
 	private Integer player1Score;
@@ -21,5 +24,6 @@ public class MatchDto {
 	private String player2Race;
 	private Integer turn;
 	private Integer phase;
+	private Date date;
 		
 }

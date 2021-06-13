@@ -1,6 +1,9 @@
 package org.sadoke.service;
 
+import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -44,10 +47,12 @@ public class MatchService {
 	}
 
 	@Transactional
-	public void createMatch(MatchRequest m) throws Exception {
+	public long createMatch(MatchRequest m) throws Exception {
 		User user1 = userRepos.findById(m.getUserIdPlayer1()).get();
 		User user2 = userRepos.findById(m.getUserIdPlayer2()).get();
-		matchRepos.save(Match.builder().player1(user1).player2(user2).details(createDetails(m)).build());
+		Date date = (m.getDate() != null) ? m.getDate() : new Date(System.currentTimeMillis());
+		Match match = matchRepos.save(Match.builder().player1(user1).player2(user2).details(createDetails(m)).date(date).build());
+		return match.getId();
 	}
 
 	private MatchDetails createDetails(MatchRequest m) {
@@ -85,11 +90,19 @@ public class MatchService {
 	}
 
 	private MatchDto buildMatchDto(Match m) {
-		return MatchDto.builder().phase(m.getDetails().getPhase()).turn(m.getDetails().getTurn())
+		return MatchDto.builder().id(m.getId()).phase(m.getDetails().getPhase()).turn(m.getDetails().getTurn())
 				.player1(m.getPlayer1().getUserId()).player2(m.getPlayer2().getUserId())
 				.player1CP(m.getDetails().getPlayer1CP()).player2CP(m.getDetails().getPlayer2CP())
 				.player1Score(m.getDetails().getPlayer1Score()).player2Score(m.getDetails().getPlayer2Score())
 				.player1Race(m.getDetails().getPlayer1Race()).player2Race(m.getDetails().getPlayer2Race())
+				.date(m.getDate())
 				.build();
+	}
+
+	public MatchDto[] hostMatches(String user) throws Exception {
+		Optional<User> u = userRepos.findById(user);
+		if (u.isEmpty()) throw new Exception("User not found!");
+		List<Match> matchesAsHost = u.get().getMatchesAsHost();
+		return matchesAsHost.stream().map(this::buildMatchDto).toArray(MatchDto[]::new);
 	}
 }

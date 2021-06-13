@@ -12,6 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 @SpringBootApplication
 @ComponentScan
 @ComponentScan(basePackages = "org.sadoke")
@@ -35,8 +38,8 @@ public class DemoApplication implements CommandLineRunner {
 				.matchingPassword("123").email("super2xx@gmail.com").build());
 		userService.confirmRegistration(u1);
 		userService.confirmRegistration(u2);
-		matchService.createMatch(MatchRequest.builder().userIdPlayer1("a").userIdPlayer2("b").user1Race("Necron")
-				.user2Race("Death Guard").build());
+		matchService.createMatch(MatchRequest.builder().id(1).userIdPlayer1("a").userIdPlayer2("b").user1Race("Necron")
+				.user2Race("Death Guard").date(Date.valueOf(LocalDate.parse("2020-02-25"))).build());
 
 	}
 
