@@ -34,8 +34,8 @@ public class MatchService {
 	}
 
 	@Transactional
-	public void adjustScore(String id, GameUpdateRequest request) throws Exception {
-		Optional<Match> m = matchRepos.findById(Long.parseLong(id));
+	public void adjustScore(Long id, GameUpdateRequest request) throws Exception {
+		Optional<Match> m = matchRepos.findById(id);
 		if (!m.isPresent())
 			throw new Exception("Match not found!");
 		MatchDetails mDetails = m.get().getDetails();
@@ -101,7 +101,7 @@ public class MatchService {
 
 	public MatchDto[] hostMatches(String user) throws Exception {
 		Optional<User> u = userRepos.findById(user);
-		if (u.isEmpty()) throw new Exception("User not found!");
+		if (!u.isPresent()) throw new Exception("User not found!");
 		List<Match> matchesAsHost = u.get().getMatchesAsHost();
 		return matchesAsHost.stream().map(this::buildMatchDto).toArray(MatchDto[]::new);
 	}
