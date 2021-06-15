@@ -31,8 +31,8 @@ public class MatchService {
 	}
 
 	@Transactional
-	public void adjustScore(Long id, GameUpdateRequest request) throws Exception {
-		Optional<Match> m = matchRepos.findById(id);
+	public void adjustScore(String id, GameUpdateRequest request) throws Exception {
+		Optional<Match> m = matchRepos.findById(Long.parseLong(id));
 		if (!m.isPresent())
 			throw new Exception("Match not found!");
 		MatchDetails mDetails = m.get().getDetails();
