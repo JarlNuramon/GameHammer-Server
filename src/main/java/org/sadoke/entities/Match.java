@@ -35,5 +35,6 @@ public class Match {
 	@OneToOne(cascade = CascadeType.ALL)
 	private MatchDetails details;
 	private Date date;
-	private boolean finished;
+	@Builder.Default
+	private boolean finished =false;
 }

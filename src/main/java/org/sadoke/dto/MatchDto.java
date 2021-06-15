@@ -25,5 +25,6 @@ public class MatchDto {
 	private Integer turn;
 	private Integer phase;
 	private Date date;
+	private int state;
 		
 }

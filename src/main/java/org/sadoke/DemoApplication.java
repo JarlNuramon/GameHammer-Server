@@ -33,13 +33,13 @@ public class DemoApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		User u1 = userService.registerNewUserAccount(
-				UserDto.builder().userId("a").password("123").matchingPassword("123").email("super@gmail.com").build());
-		User u2 = userService.registerNewUserAccount(UserDto.builder().userId("b").password("123")
+				UserDto.builder().userId("HeroMarine").password("123").matchingPassword("123").email("super@gmail.com").build());
+		User u2 = userService.registerNewUserAccount(UserDto.builder().userId("Destroyer").password("123")
 				.matchingPassword("123").email("super2xx@gmail.com").build());
 		userService.confirmRegistration(u1);
 		userService.confirmRegistration(u2);
-		matchService.createMatch(MatchRequest.builder().id(1).userIdPlayer1("a").userIdPlayer2("b").user1Race("Necron")
-				.user2Race("Death Guard").date(Date.valueOf(LocalDate.parse("2020-02-25"))).build());
+		matchService.createMatch(MatchRequest.builder().id(1).userIdPlayer1("HeroMarine").userIdPlayer2("Destroyer").user1Race("Adeptus Astares: Ultramarines")
+				.user2Race("Necrons").date(Date.valueOf(LocalDate.parse("2020-02-25"))).build());
 
 	}
 

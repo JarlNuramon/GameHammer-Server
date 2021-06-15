@@ -96,13 +96,15 @@ public class MatchService {
 				.player1Score(m.getDetails().getPlayer1Score()).player2Score(m.getDetails().getPlayer2Score())
 				.player1Race(m.getDetails().getPlayer1Race()).player2Race(m.getDetails().getPlayer2Race())
 				.date(m.getDate())
+				.state(m.isFinished()? 1:0)
 				.build();
 	}
 
 	public MatchDto[] hostMatches(String user) throws Exception {
 		Optional<User> u = userRepos.findById(user);
 		if (!u.isPresent()) throw new Exception("User not found!");
-		List<Match> matchesAsHost = u.get().getMatchesAsHost();
-		return matchesAsHost.stream().map(this::buildMatchDto).toArray(MatchDto[]::new);
+		List<Match> matches = u.get().getMatchesAsHost();
+		matches.addAll(u.get().getMatchesAsPlayer());
+		return matches.stream().map(this::buildMatchDto).toArray(MatchDto[]::new);
 	}
 }

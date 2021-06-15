@@ -44,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/h2/**").permitAll() // Datenbank
 				.antMatchers("/api/v1/authenticate/**").permitAll() // Authenication
 				.antMatchers("/api/v1/user/**").permitAll() // Authenication
-				.antMatchers("/api/v1/match/**").permitAll()
+				//.antMatchers("/api/v1/match/**").permitAll()
 				.anyRequest().authenticated().and().exceptionHandling()
 				.authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
