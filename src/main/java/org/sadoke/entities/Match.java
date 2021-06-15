@@ -15,6 +15,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,5 +34,6 @@ public class Match {
 	private User player2;
 	@OneToOne(cascade = CascadeType.ALL)
 	private MatchDetails details;
+	private Date date;
 	private boolean finished;
 }
