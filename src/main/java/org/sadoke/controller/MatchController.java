@@ -51,6 +51,7 @@ public class MatchController {
 			@ApiResponse(responseCode = "400", description = "He wasnt found", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
 	public ResponseEntity<MatchDto> getMatch(@PathVariable("matchId") String matchid) throws Exception {
+		
 		return ResponseEntity.ok(matchService.getMatchDto(matchid));
 	}
 	
@@ -87,6 +88,7 @@ public class MatchController {
 			@ApiResponse(responseCode = "400", description = "ehm this shouldn't happen. Please notify the devs", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
 	public ResponseEntity<MatchDto> endGame(@PathVariable("matchId") String matchid) throws Exception {
+		matchService.endGame(matchid);
 		return ResponseEntity.ok(null);
 	}
 

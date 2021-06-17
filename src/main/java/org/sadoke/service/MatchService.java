@@ -107,4 +107,13 @@ public class MatchService {
 		matches.addAll(u.get().getMatchesAsPlayer());
 		return matches.stream().map(this::buildMatchDto).toArray(MatchDto[]::new);
 	}
+
+	public void endGame(String matchid) throws Exception {
+		Optional<Match> m = matchRepos.findById(Long.parseLong(matchid));
+		if (!m.isPresent())
+			throw new Exception("Match not found!");
+		m.get().setFinished(true);
+		matchRepos.save(m.get());
+		
+	}
 }
