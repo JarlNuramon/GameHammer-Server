@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.sadoke.dto.MatchDto;
+import org.sadoke.dto.MatchDto.MatchDtoBuilder;
 import org.sadoke.entities.Match;
 import org.sadoke.entities.MatchDetails;
 import org.sadoke.entities.MatchDetails.MatchDetailsBuilder;
@@ -101,16 +102,23 @@ public class MatchService {
 	}
 
 	private MatchDto buildMatchDto(Match m) {
-		return MatchDto.builder().id(m.getId()).phase(m.getDetails().getPhase()).turn(m.getDetails().getTurn())
+		MatchDtoBuilder builder =  MatchDto.builder().id(m.getId()).phase(m.getDetails().getPhase()).turn(m.getDetails().getTurn())
 				.player1(m.getPlayer1().getUserId()).player2(m.getPlayer2().getUserId())
 				.player1CP(m.getDetails().getPlayer1CP()).player2CP(m.getDetails().getPlayer2CP())
 				.player1Score(m.getDetails().getPlayer1Score()).player2Score(m.getDetails().getPlayer2Score())
 				.player1Race(m.getDetails().getPlayer1Race()).player2Race(m.getDetails().getPlayer2Race())
-				.player1armyList(m.getDetails().getPlayer1ArmyList().getName()).player2armyList(m.getDetails().getPlayer2ArmyList().getName())
-				.player1armyListContent(m.getDetails().getPlayer1ArmyList().getArmyList()).player1armyListContent(m.getDetails().getPlayer2ArmyList().getArmyList())
 				.date(m.getDate())
-				.state(m.isFinished()? 1:0)
-				.build();
+				.state(m.isFinished()? 1:0);
+		
+		if(m.getDetails().getPlayer1ArmyList()!=null)
+			builder.player1armyList(m.getDetails().getPlayer1ArmyList().getName())
+				.player1armyListContent(m.getDetails().getPlayer1ArmyList().getArmyList());
+		if(m.getDetails().getPlayer1ArmyList()!=null)
+			builder.player2armyList( m.getDetails().getPlayer2ArmyList().getName())
+				.player2armyListContent( m.getDetails().getPlayer2ArmyList().getArmyList());
+							
+		return  builder.build();
+				
 	}
 
 	public MatchDto[] hostMatches(String user) throws Exception {
