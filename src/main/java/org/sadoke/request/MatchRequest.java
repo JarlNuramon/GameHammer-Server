@@ -11,6 +11,8 @@ public class MatchRequest {
 	private long id;
 	private String userIdPlayer1;
 	private String userIdPlayer2;
+	private String user1Army;
+	private String user2Army;
 	private String user1Race;
 	private String user2Race;
 	private Date date;

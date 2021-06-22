@@ -10,7 +10,9 @@ import javax.transaction.Transactional;
 import org.sadoke.dto.MatchDto;
 import org.sadoke.entities.Match;
 import org.sadoke.entities.MatchDetails;
+import org.sadoke.entities.MatchDetails.MatchDetailsBuilder;
 import org.sadoke.entities.User;
+import org.sadoke.repository.ArmyListRepository;
 import org.sadoke.repository.DetailsRepository;
 import org.sadoke.repository.MatchRepository;
 import org.sadoke.repository.UserRepository;
@@ -28,6 +30,7 @@ public class MatchService {
 	private final UserRepository userRepos;
 	private final MatchRepository matchRepos;
 	private final DetailsRepository detailsRepository;
+	private final ArmyListRepository armyListRepository;
 
 	public boolean playerExists(String userId) {
 		return userRepos.userExists(userId) > 0;
@@ -51,13 +54,21 @@ public class MatchService {
 		User user1 = userRepos.findById(m.getUserIdPlayer1()).get();
 		User user2 = userRepos.findById(m.getUserIdPlayer2()).get();
 		Date date = (m.getDate() != null) ? m.getDate() : new Date(System.currentTimeMillis());
-		Match match = matchRepos.save(Match.builder().player1(user1).player2(user2).details(createDetails(m)).date(date).build());
+		Match match = matchRepos.save(Match.builder().player1(user1).player2(user2).details(createDetails(m,user1,user2)).date(date).build());
 		return match.getId();
 	}
 
-	private MatchDetails createDetails(MatchRequest m) {
-		return MatchDetails.builder().player1CP(0).player2CP(0).player1Score(0).player2Score(0)
-				.player1Race(m.getUser1Race()).player2Race(m.getUser2Race()).turn(0).phase(0).build();
+	private MatchDetails createDetails(MatchRequest m, User user1, User user2) {
+		
+		MatchDetailsBuilder builder = MatchDetails.builder().player1CP(0).player2CP(0).player1Score(0).player2Score(0).turn(0).phase(0)
+				.player1Race(m.getUser1Race()).player2Race(m.getUser2Race());
+		if(m.getUser1Army()!=null)
+			builder.player1ArmyList(armyListRepository.getArmyByName(m.getUser1Army(), user1));
+		if(m.getUser2Army()!=null)
+			builder.player2ArmyList(armyListRepository.getArmyByName(m.getUser2Army(), user2));
+		
+		return builder.build();
+			
 	}
 
 	@Transactional
@@ -95,6 +106,8 @@ public class MatchService {
 				.player1CP(m.getDetails().getPlayer1CP()).player2CP(m.getDetails().getPlayer2CP())
 				.player1Score(m.getDetails().getPlayer1Score()).player2Score(m.getDetails().getPlayer2Score())
 				.player1Race(m.getDetails().getPlayer1Race()).player2Race(m.getDetails().getPlayer2Race())
+				.player1armyList(m.getDetails().getPlayer1ArmyList().getName()).player2armyList(m.getDetails().getPlayer2ArmyList().getName())
+				.player1armyListContent(m.getDetails().getPlayer1ArmyList().getArmyList()).player1armyListContent(m.getDetails().getPlayer2ArmyList().getArmyList())
 				.date(m.getDate())
 				.state(m.isFinished()? 1:0)
 				.build();

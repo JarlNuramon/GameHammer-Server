@@ -22,6 +22,10 @@ public class MatchDto {
 	private Integer player2CP;
 	private String player1Race;
 	private String player2Race;
+	private String player1armyList;
+	private String player2armyList;
+	private String player1armyListContent;
+	private String player2armyListContent;
 	private Integer turn;
 	private Integer phase;
 	private Date date;

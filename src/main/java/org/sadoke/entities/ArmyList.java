@@ -28,7 +28,9 @@ public class ArmyList {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Basic(fetch = FetchType.LAZY)
 	private long id;
-
+	
+	private String name;
+	
 	@ManyToOne
 	private User owner;
 
@@ -38,4 +40,10 @@ public class ArmyList {
 
 	@OneToMany(mappedBy = "armyList", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Note> lists;
+	
+	@OneToMany(mappedBy = "player1ArmyList", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<MatchDetails> matches;
+
+	@OneToMany(mappedBy = "player2ArmyList", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<MatchDetails> matches2;
 }
