@@ -45,6 +45,8 @@ public class DemoApplication implements CommandLineRunner {
 				.matchingPassword("123").email("super2xx@gmail.com").build());
 		Map<Integer,String> notesDestroyer = new HashMap<>();
 		Map<Integer,String> notesHeroMarine = new HashMap<>();
+		notesHeroMarine.put(1, "<ul><li>Destruction! </li>"
+				+ "<li>Sergent: Upgrade soldier! </li></ul>");
 		notesDestroyer.put(1, "<ul><li>MY WILL BE DONE! </li>"
 				+ "<li>Technomancer: Rites of Reanimation! </li>"
 				+"<li>Living Metal! </li></ul>");

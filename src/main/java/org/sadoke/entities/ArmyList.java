@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +40,7 @@ public class ArmyList {
 	private String armyList;
 
 	@OneToMany(mappedBy = "armyList", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	 @OrderBy("phase ASC")
 	private List<Note> lists;
 	
 	@OneToMany(mappedBy = "player1ArmyList", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

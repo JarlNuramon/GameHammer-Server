@@ -1,5 +1,8 @@
 package org.sadoke.controller;
 
+import javax.transaction.Transactional;
+
+import org.sadoke.dto.GameDto;
 import org.sadoke.dto.MatchDto;
 import org.sadoke.request.GameUpdateRequest;
 import org.sadoke.request.MatchRequest;
@@ -27,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin("*")
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class MatchController {
 
 	private final MatchService matchService;
@@ -54,30 +58,40 @@ public class MatchController {
 		
 		return ResponseEntity.ok(matchService.getMatchDto(matchid));
 	}
-	
+	@GetMapping(value = "game/{matchId}")
+	@Operation(summary = "Returns the game with given id")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "He was found", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = MatchDto.class)) }),
+			@ApiResponse(responseCode = "400", description = "He wasnt found", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
+	public ResponseEntity<GameDto> getGame(@PathVariable("matchId") String matchid) throws Exception {
+		
+		return ResponseEntity.ok(matchService.getGameDto(matchid));
+	}	
 	
 	@PostMapping(value = "{matchId}/nextStep")
 	@Operation(summary = "Match goes to the next step")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Match step changed", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = MatchDto.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = GameDto.class)) }),
 			@ApiResponse(responseCode = "400", description = "ehm this shouldn't happen. Please notify the devs", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
-	public ResponseEntity<MatchDto> nextStep(@PathVariable("matchId") String matchid) throws Exception {
+	public ResponseEntity<GameDto> nextStep(@PathVariable("matchId") String matchid) throws Exception {
 		matchService.nextPhase(matchid);
-		return ResponseEntity.ok(matchService.getMatchDto(matchid));
+		return ResponseEntity.ok(matchService.getGameDto(matchid));
 	}
 
 	@PostMapping(value = "{matchId}/nextTurn")
 	@Operation(summary = "Next Player turn")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Turn ended", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = MatchDto.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = GameDto.class)) }),
 			@ApiResponse(responseCode = "400", description = "ehm this shouldn't happen. Please notify the devs", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
-	public ResponseEntity<MatchDto> nextTurn(@PathVariable("matchId") String matchid) throws Exception {
+	public ResponseEntity<GameDto> nextTurn(@PathVariable("matchId") String matchid) throws Exception {
 		matchService.nextTurn(matchid);
-		return ResponseEntity.ok(matchService.getMatchDto(matchid));
+		return ResponseEntity.ok(matchService.getGameDto(matchid));
 	}
 
 	@PostMapping(value = "{matchId}/end")

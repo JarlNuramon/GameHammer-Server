@@ -31,4 +31,9 @@ public class Note {
 	private int phase;
 	@Column(length = Integer.MAX_VALUE)
 	private String notes;
+	
+	@Override
+	public String toString() {
+		return "phase: " + phase + " note: " + notes;
+	}
 }

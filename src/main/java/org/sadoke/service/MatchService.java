@@ -7,11 +7,14 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.sadoke.dto.GameDto;
+import org.sadoke.dto.GameDto.GameDtoBuilder;
 import org.sadoke.dto.MatchDto;
 import org.sadoke.dto.MatchDto.MatchDtoBuilder;
 import org.sadoke.entities.Match;
 import org.sadoke.entities.MatchDetails;
 import org.sadoke.entities.MatchDetails.MatchDetailsBuilder;
+import org.sadoke.entities.Note;
 import org.sadoke.entities.User;
 import org.sadoke.repository.ArmyListRepository;
 import org.sadoke.repository.DetailsRepository;
@@ -61,7 +64,7 @@ public class MatchService {
 
 	private MatchDetails createDetails(MatchRequest m, User user1, User user2) {
 		
-		MatchDetailsBuilder builder = MatchDetails.builder().player1CP(0).player2CP(0).player1Score(0).player2Score(0).turn(0).phase(0)
+		MatchDetailsBuilder builder = MatchDetails.builder().player1CP(0).player2CP(0).player1Score(0).player2Score(0).turn(1).phase(1)
 				.player1Race(m.getUser1Race()).player2Race(m.getUser2Race());
 		if(m.getUser1Army()!=null)
 			builder.player1ArmyList(armyListRepository.getArmyByName(m.getUser1Army(), user1));
@@ -121,6 +124,42 @@ public class MatchService {
 				
 	}
 
+	public GameDto getGameDto(String matchid) throws Exception {
+		Optional<Match> m = matchRepos.findById(Long.parseLong(matchid));
+		if (!m.isPresent())
+			throw new Exception("Match not found!");
+
+		return buildGameDto(m.get());
+	}
+
+	private GameDto buildGameDto(Match m) {
+		GameDtoBuilder builder =  GameDto.builder().id(m.getId()).phase(m.getDetails().getPhase()).turn(m.getDetails().getTurn())
+				.player1(m.getPlayer1().getUserId()).player2(m.getPlayer2().getUserId())
+				.player1CP(m.getDetails().getPlayer1CP()).player2CP(m.getDetails().getPlayer2CP())
+				.player1Score(m.getDetails().getPlayer1Score()).player2Score(m.getDetails().getPlayer2Score())
+				.player1Race(m.getDetails().getPlayer1Race()).player2Race(m.getDetails().getPlayer2Race())
+				.date(m.getDate())
+				.state(m.isFinished()? 1:0);
+		
+		if(m.getDetails().getPlayer1ArmyList()!=null) {
+			builder.player1armyList(m.getDetails().getPlayer1ArmyList().getName());
+			log.info("notes = {}", m.getDetails().getPlayer2ArmyList().getLists());
+			for(Note note : m.getDetails().getPlayer1ArmyList().getLists())
+				if(note.getPhase()==m.getDetails().getPhase().intValue())
+					builder.player1Note(note.getNotes());
+		}
+		
+		if(m.getDetails().getPlayer2ArmyList()!=null) {
+			builder.player2armyList(m.getDetails().getPlayer2ArmyList().getName());
+			for(Note note : m.getDetails().getPlayer2ArmyList().getLists())
+				if((note.getPhase())==(m.getDetails().getPhase().intValue()+7)%14)
+					builder.player2Note(note.getNotes());
+		}
+							
+		return  builder.build();
+				
+	}
+	
 	public MatchDto[] hostMatches(String user) throws Exception {
 		Optional<User> u = userRepos.findById(user);
 		if (!u.isPresent()) throw new Exception("User not found!");
