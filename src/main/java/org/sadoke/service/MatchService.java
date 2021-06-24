@@ -58,18 +58,20 @@ public class MatchService {
 		User user1 = userRepos.findById(m.getUserIdPlayer1()).get();
 		User user2 = userRepos.findById(m.getUserIdPlayer2()).get();
 		Date date = (m.getDate() != null) ? m.getDate() : new Date(System.currentTimeMillis());
+		
 		Match match = matchRepos.save(Match.builder().player1(user1).player2(user2).details(createDetails(m,user1,user2)).date(date).build());
 		return match.getId();
 	}
 
+	@Transactional
 	private MatchDetails createDetails(MatchRequest m, User user1, User user2) {
 		
 		MatchDetailsBuilder builder = MatchDetails.builder().player1CP(0).player2CP(0).player1Score(0).player2Score(0).turn(1).phase(1)
 				.player1Race(m.getUser1Race()).player2Race(m.getUser2Race());
 		if(m.getUser1Army()!=null)
-			builder.player1ArmyList(armyListRepository.getArmyByName(m.getUser1Army(), user1));
+			builder.player1ArmyList(armyListRepository.getArmyByName(m.getUser1Army().trim(), user1));
 		if(m.getUser2Army()!=null)
-			builder.player2ArmyList(armyListRepository.getArmyByName(m.getUser2Army(), user2));
+			builder.player2ArmyList(armyListRepository.getArmyByName(m.getUser2Army().trim(), user2));
 		
 		return builder.build();
 			

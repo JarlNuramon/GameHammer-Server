@@ -6,8 +6,9 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
-import org.sadoke.ApplicationProperties;
+import org.sadoke.dto.ArmyDto;
 import org.sadoke.entities.Note;
+import org.sadoke.entities.User;
 import org.sadoke.repository.ArmyListRepository;
 import org.sadoke.entities.ArmyList;
 import org.sadoke.request.CreateArmyListRequest;
@@ -15,12 +16,15 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class NoteService {
 private final ArmyListRepository armyListRepo;
 	private final UserService userService;
+	
+	
 	@Transactional
 	public ArmyList createArmyList(CreateArmyListRequest req) {
 		ArmyList army = armyListRepo.save( ArmyList.builder()
@@ -39,4 +43,16 @@ private final ArmyListRepository armyListRepo;
 		return noteList;
 	}
 
+	public List<ArmyDto> getUsersList(String userid)
+	{
+		List<ArmyDto> armyList = new ArrayList<>();
+		User user = userService.getUser(userid);
+		for(ArmyList army : user.getLists()) 
+			armyList.add(getArmyDto(army));
+		return armyList;
+		
+	}
+	private ArmyDto getArmyDto(ArmyList army) {
+		return ArmyDto.builder().name(army.getName()).race(army.getRace()).build();
+	}
 }

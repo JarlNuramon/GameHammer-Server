@@ -1,8 +1,13 @@
 package org.sadoke.controller;
 
+import java.util.List;
+
+import org.sadoke.dto.ArmyDto;
 import org.sadoke.dto.MatchDto;
+import org.sadoke.service.NoteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,16 +27,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class NoteController {
-
-	@PostMapping(value = "{matchId}/note")
-	@Operation(summary = "GetNoteForTurn")
+	
+	
+	private final NoteService noteService;
+	
+	@GetMapping(value = "all/{userid}")
+	@Operation(summary = "Get all Notes")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Game was declared to end", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = MatchDto.class)) }),
 			@ApiResponse(responseCode = "400", description = "ehm this shouldn't happen. Please notify the devs", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }) })
-	public ResponseEntity<MatchDto> adjustScores(@PathVariable("matchId") Long matchid) throws Exception {
-		return ResponseEntity.ok(null);
+	public ResponseEntity<List<ArmyDto>> getAllLists(@PathVariable("userid") String userid) throws Exception {
+		return ResponseEntity.ok(noteService.getUsersList(userid));
 	}
 
 }
